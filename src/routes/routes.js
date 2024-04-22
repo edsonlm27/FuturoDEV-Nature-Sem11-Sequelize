@@ -77,4 +77,31 @@ routes.get("/cursos", async (req, res) => {
   }
 });
 
+routes.put("/cursos/:id", async (req, res) => {
+  const { id } = req.params;
+  const curso = await Curso.findByPk(id);
+
+  if (!curso) {
+    return res.status(404).json({ message: "Curso não encontrado!" });
+  }
+
+  curso.update(req.body);
+  await curso.save();
+  res.status(200).json(curso);
+});
+
+routes.delete("/cursos/:id", async (req, res) => {
+  const { id } = req.params;
+  const curso = await Curso.findByPk(id);
+  if (!curso) {
+    return res.status(404).json({ message: "Curso não encontrado!" });
+  }
+  Curso.destroy({
+    where: {
+      id: id,
+    },
+  });
+  res.status(204).json({});
+});
+
 module.exports = routes;
